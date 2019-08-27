@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- 依赖注入: 属性注入 -->
+	<bean id="helloWord" class="spring.HelloWord">
+		<property name="name" value="liMing"></property>
+		<property name="name" >
+		<value>
+		<![CDATA[]]>
+		</value>
+		</property>
+	</bean>
+	<!-- 依赖注入: 构造方法注入 -->
+	<bean id="helloWord2" class="spring.HelloWord">
+		<constructor-arg value="zhangSan" type="java.lang.String" ></constructor-arg>
+	</bean>
+	<!-- 特殊字符处理 -->
+	<bean id="helloWord3" class="spring.HelloWord">
+		<constructor-arg type="java.lang.String">
+			<value><![CDATA[wangxiao!<]]></value>
+		</constructor-arg>
+	</bean>
+	<!-- 引入其他Bean 三种方式 -->
+	<bean id="car" class="spring.Car">
+		<property name="bland" value="baoma"></property>
+		<property name="price" value="100"></property>
+	</bean>
+
+	<bean id="person" class="spring.Person" scope="prototype">
+		<property name="name" value="wangxiao"></property>
+		<property name="age" value="12"></property>
+		<property name="adress" value="baoding"></property>
+		<property name="car" ref="car"></property>
+		<property name="bigs">
+			<map>
+				<entry key="aa" value-ref="big1"></entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="person2" class="spring.Person">
+		<property name="name" value="wangxiao"></property>
+		<property name="age" value="12"></property>
+		<property name="adress" value="baoding"></property>
+		<property name="car">
+			<ref bean="car" />
+		</property>
+	</bean>
+	<!-- 引入集合属性list,map,properties -->
+	<bean id="dog1" class="spring.Dog">
+		<property name="name" value="huahua"></property>
+	</bean>
+	<bean id="dog2" class="spring.Dog">
+		<property name="name" value="maomao"></property>
+	</bean>
+
+	<bean id="big1" class="spring.Big">
+		<property name="name" value="huahua"></property>
+	</bean>
+	<bean id="person3" class="spring.Person">
+		<property name="name" value="wangxiao"></property>
+		<property name="age" value="12"></property>
+		<property name="adress" value="baoding"></property>
+		<property name="car">
+			<bean class="spring.Car">
+				<property name="bland" value="dazhong"></property>
+				<property name="price" value="30"></property>
+			</bean>
+		</property>
+		<property name="dogs">
+			<list>
+				<ref bean="dog1" />
+				<ref bean="dog2" />
+			</list>
+		</property>
+		<property name="bigs">
+			<map>
+				<entry key="aa" value-ref="big1"></entry>
+			</map>
+		</property>
+		<property name="properties">
+			<props>
+				<prop key="name">123</prop>
+				<prop key="age">32</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- bean自动装配autowire -->
+
+	<bean id="person4" class="spring.Person" autowire="byName"></bean>
+
+	<bean id="person5" class="spring.Person" parent="person"
+		depends-on="car"></bean>
+
+	<context:property-placeholder location="db.properties"
+		system-properties-mode="FALLBACK" />
+	<bean id="person6" class="spring.Person">
+		<property name="properties">
+			<props>
+				<prop key="username">${username}</prop>
+				<prop key="password">${password}</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 配置方式：静态工厂 -->
+	<bean id="staticFactory" class="spring.StaticFactory"
+		factory-method="getCar">
+		<constructor-arg value="aa"></constructor-arg>
+	</bean>
+	<bean id="caseFactory" class="spring.CaseFactory"></bean>
+	<bean id="caseFactoryCar" factory-bean="caseFactory"
+		factory-method="getCar">
+		<constructor-arg value="bb"></constructor-arg>
+	</bean>
+	<bean id="factoryBeanCar" class="spring.FactoryBeanCar" ></bean>
+</beans>
